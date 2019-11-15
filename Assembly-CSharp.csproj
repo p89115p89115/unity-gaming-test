@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\DetectEmeny.cs" />
     <Compile Include="Assets\Script\move.cs" />
+    <Compile Include="Assets\Script\Raytest.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/unity/gaming test/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
