@@ -6,7 +6,6 @@ using UnityEngine;
 public class Raytest : MonoBehaviour
 {
   
-
     //射線本身不能加collider 不然第一個射到的會是自己
     //不過也可以用其他方法來避免
 
@@ -21,6 +20,7 @@ public class Raytest : MonoBehaviour
         //畫一條線 方便看
 
         //用Raycast 只能記錄射到的第一個
+
         RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, fwd);
         //射一個射線並記錄射中哪些目標 這個好像是無窮距離
         
