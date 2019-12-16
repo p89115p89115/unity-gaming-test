@@ -5,9 +5,10 @@ using UnityEngine;
 public class destoryText : MonoBehaviour
 {
     // Start is called before the first frame update
+    public float DestroyTime;
     void Start()
     {
-        Destroy(gameObject, 2);
+        Destroy(gameObject, DestroyTime);
        
     }
 

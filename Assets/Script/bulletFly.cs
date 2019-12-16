@@ -4,26 +4,36 @@ using UnityEngine;
 
 public class bulletFly : MonoBehaviour
 {
-    //飛行速度
-    public float flyingSpeed=0.5f;
-    //飛行目標
-    public GameObject target;
+
+    public float flyingSpeed; //飛行速度
+
+    public GameObject target; //飛行目標
+    private Vector3 flyto;
+   
     private void Start()
     {
-        Destroy(gameObject, 5);
+        
+        Destroy(gameObject, 2); //兩秒後消滅
+      
+        flyto = target.transform.position; //按下射擊時所偵測到的 target 位置          
+   
+        GetComponent<Rigidbody2D>().AddForce((flyto - transform.position).normalized * flyingSpeed);
+        //print((flyto - transform.position).normalized); 
+        // normalized是為了防止 較近的target addforce較小
+        // 可是感覺還是有速度不一樣的問題    
     }
-    void Update()
+
+    void FixedUpdate()
     {
-        //物件移動 
-        this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, target.transform.position, flyingSpeed);
-        //碰到就消滅
-       // if (this.transform.position == target.transform.position)
-         //   Destroy(this.gameObject);
+       
+        Debug.DrawLine(transform.position, flyto, Color.red);
+
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Enemy")
-        Destroy(gameObject);
+       if(collision.gameObject.name != "Player")
+            Destroy(gameObject);//撞到東西就消滅
     }
 
 }

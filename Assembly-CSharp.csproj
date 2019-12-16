@@ -70,9 +70,11 @@
     <Compile Include="Assets\Script\DetectEmeny.cs" />
     <Compile Include="Assets\Script\draw.cs" />
     <Compile Include="Assets\Script\Enemy.cs" />
+    <Compile Include="Assets\Script\EnemyTestMove.cs" />
     <Compile Include="Assets\Script\floorMove.cs" />
     <Compile Include="Assets\Script\move.cs" />
     <Compile Include="Assets\Script\Raytest.cs" />
+    <Compile Include="Assets\Script\transformState.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/unity/gaming test/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -6,7 +6,7 @@ public class creatMonster : MonoBehaviour
 {
     public GameObject Monster;//要生的怪
     public float repeatRate;//出怪頻率
-    public int MonsterNum;//一次生成數量 
+    public int MonsterNum;//一次生成數量     
     void Start()
     {
         InvokeRepeating("CreatMoneter", 1, repeatRate);//一秒後每隔repeatRate秒執行一次

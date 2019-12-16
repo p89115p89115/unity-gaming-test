@@ -32,12 +32,30 @@ public class floorMove : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, Right, ref currentVelocity, movingTime, moveSpeed);
         //transform.position = Vector3.Lerp(transform.position, Right, moveSpeed);
     }
-   
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        if (c.gameObject.name == "Player")
+        {
+            var target = c.gameObject.transform;
+            target.SetParent(this.transform);
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D c)
+    {
+        if (c.gameObject.name == "Player")
+        {
+            var target = c.gameObject.transform;
+            var original = target.GetComponent<transformState>().OriginalParent;
+            target.SetParent(original);
+        }
+    }
 
 
-    
 
-  
+
+
+
 }
    
 

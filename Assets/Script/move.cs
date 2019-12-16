@@ -5,14 +5,18 @@ using UnityEngine;
 public class move : MonoBehaviour
 {
 
-    public float movespeed;
-    //移動速度
+    public float movespeed;  //移動速度
     public bool isGround;
     public float CheckRadius;//檢測長度
-   
-    public float jumpSpeed;//跳躍速度
-    public float jumpHeight;
+       
+    public float jumpHeight; //跳躍高度
+    public float jumpAirForce;
 
+    private Rigidbody2D rb;
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
     void FixedUpdate()
     {
         
@@ -25,7 +29,7 @@ public class move : MonoBehaviour
             if (count.gameObject.tag == "Ground")
             {
                 isGround = true;
-                print(count.gameObject.tag);
+                //print(count.gameObject.tag);
             }
          }
         
@@ -40,11 +44,17 @@ public class move : MonoBehaviour
         //跳躍
         if (Input.GetKeyDown(KeyCode.Space) && isGround)
         {
-           
-            GetComponent<Rigidbody2D>().velocity = new Vector3(0, jumpHeight, 0);
-            GetComponent<Rigidbody2D>().AddForce(Vector3.up * jumpSpeed * Time.deltaTime);
-            isGround = false;
+            rb.AddForce(Vector2.up * jumpHeight);
+           isGround = false;
             
         }
+        //跳躍上升
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (rb.velocity.y > 0)
+              rb.velocity = new Vector2(rb.velocity.x,rb.velocity.y * 0.5f);//緩緩上升
+        }
+
+
     }
 }

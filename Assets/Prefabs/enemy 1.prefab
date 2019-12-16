@@ -141,5 +141,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4644045301263091892, guid: 67420066219288d4ebecd6891052fbff, type: 3}
-  moveSpeed: 5
+  moveSpeed: 10
   smoothTime: 1

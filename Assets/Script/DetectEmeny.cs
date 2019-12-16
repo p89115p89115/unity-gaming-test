@@ -9,16 +9,15 @@ public class DetectEmeny : MonoBehaviour
 {
     //public Color detectColor ;
     public float detectDistance ;
-    public GameObject bullet;
-    public GameObject gun;
+    public GameObject bullet; //子彈
+    public GameObject gun; //發射的物件
 
-    //public GameObject bullet;
-    //private GameObject emeny;
     private void Start() 
     {
     }
 
     private bulletFly script;
+    public GameObject target;
     private void Update() {
         // 碰撞圖層
         LayerMask ColliderMask = LayerMask.GetMask("Collider");
@@ -37,13 +36,14 @@ public class DetectEmeny : MonoBehaviour
                     RaycastHit2D hit = Physics2D.Raycast(this.transform.position,(enemy.transform.position - this.transform.position) ,10f,ColliderMask);
                     // 若碰撞結果為 tag == enemy
                     if (hit.collider.tag == "Enemy"){
-                        
+
                         //把物件傳給子彈 好讓他有敵人的座標
                         script = bullet.transform.GetComponent<bulletFly>();
                         script.target =hit.collider.gameObject;
+                        //target = hit.collider.gameObject;
                         
                         Debug.DrawLine(this.transform.position, hit.transform.position,Color.white);
-                        print(hit.collider.name);
+                       // print(hit.collider.name);
                         
                     }
                 }
@@ -54,6 +54,7 @@ public class DetectEmeny : MonoBehaviour
         {
             //如果範圍內有敵人才射
             if (script.target != null)
+
              Instantiate(bullet, gun.transform.position, gun.transform.rotation);
            
         }
@@ -62,7 +63,7 @@ public class DetectEmeny : MonoBehaviour
     }
     void OnDrawGizmos() 
     {
-       // Gizmos.color = detectColor;//不知怎麼的不能用color
+       
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectDistance);
     }
