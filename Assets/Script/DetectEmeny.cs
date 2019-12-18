@@ -49,25 +49,18 @@ public class DetectEmeny : MonoBehaviour
                 }
             }
         }
-        //發射子彈
         if (Input.GetKeyDown(KeyCode.Z))
         {
             //如果範圍內有敵人才射
             if (script.target != null)
 
-             Instantiate(bullet, gun.transform.position, gun.transform.rotation);
-           
+                Instantiate(bullet, gun.transform.position, gun.transform.rotation);
+
         }
-        //把target 重設成null 不然會一直鎖定到
-        script.target = null;
+        script.target = null; //把target 重設成null 不然會一直鎖定到
     }
-    void OnDrawGizmos() 
-    {
-       
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectDistance);
-    }
-   
-  
-    
+
+
+
+
 }

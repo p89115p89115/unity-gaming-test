@@ -19,7 +19,7 @@ public class move : MonoBehaviour
     }
     void FixedUpdate()
     {
-        
+      
     
         //落地偵測    
         isGround = false;//初始化
