@@ -64,18 +64,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\bulletFly.cs" />
-    <Compile Include="Assets\Script\Control.cs" />
+    <Compile Include="Assets\Script\Combo.cs" />
     <Compile Include="Assets\Script\creatMonster.cs" />
     <Compile Include="Assets\Script\destoryText.cs" />
-    <Compile Include="Assets\Script\DetectEmeny.cs" />
-    <Compile Include="Assets\Script\draw.cs" />
     <Compile Include="Assets\Script\Enemy.cs" />
-    <Compile Include="Assets\Script\EnemyTestMove.cs" />
     <Compile Include="Assets\Script\floorMove.cs" />
-    <Compile Include="Assets\Script\move.cs" />
+    <Compile Include="Assets\Script\NoUse\camFollow.cs" />
+    <Compile Include="Assets\Script\NoUse\Control.cs" />
+    <Compile Include="Assets\Script\NoUse\DetectEmeny.cs" />
+    <Compile Include="Assets\Script\NoUse\draw.cs" />
+    <Compile Include="Assets\Script\NoUse\EnemyTestMove.cs" />
+    <Compile Include="Assets\Script\NoUse\move.cs" />
+    <Compile Include="Assets\Script\NoUse\Raytest.cs" />
+    <Compile Include="Assets\Script\physicalQuality.cs" />
     <Compile Include="Assets\Script\playerControl.cs" />
-    <Compile Include="Assets\Script\Raytest.cs" />
     <Compile Include="Assets\Script\shootingCooling.cs" />
+    <Compile Include="Assets\Script\Spawn.cs" />
     <Compile Include="Assets\Script\transformState.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/unity/gaming test/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

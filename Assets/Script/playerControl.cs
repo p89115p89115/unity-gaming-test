@@ -16,6 +16,10 @@ public class playerControl : MonoBehaviour
     public float jumpHeight; //跳躍高度
     public float jumpAirForce;
 
+    private bool isMove;
+    private bool isJump;
+    private bool isJumpUp;
+
     public float detectDistance; 
     private Rigidbody2D rb;
        
@@ -25,42 +29,73 @@ public class playerControl : MonoBehaviour
 
     private bulletFly script;
     public GameObject target; //接收用 不用設
+
+    private Animator ani;
     void Start()
     {
         currentTime = coolingTime; //初始化現在時間
         rb = GetComponent<Rigidbody2D>();
         ColliderMask = LayerMask.GetMask("Collider");
+        ani = GetComponent<Animator>();
+    }
+    private void Update()
+    {
+        
+        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        {
+            print("JUMP");
+            isJump = true;
+        }
+        if (Input.GetAxis("Horizontal").ToString() != "")
+        {
+            isMove = true;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))  //跳躍上升
+        {
+            isJumpUp = true;
+        }
     }
     void FixedUpdate()
     {
-        float movementH = 0f;
-        movementH = Input.GetAxis("Horizontal") * movespeed * Time.deltaTime;
-        Move(movementH); //移動
-
-        
+        if (isMove) //移動
+        {            
+            Move(); 
+        }
+                      
         coolingShowing();
 
         if (Input.GetKeyDown(KeyCode.Z) && coolingImage.fillAmount == 0) //射擊
         {
             detectEnemy();            
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isGround) //跳躍
+        if (isJump) //跳躍
         {
             Jump();
         }
-        if (Input.GetKeyUp(KeyCode.Space))  //跳躍上升
+        if (isJumpUp)
         {
             JumpUp();
         }
         groundDetect(); //落地偵測    
-        
 
+        if (Input.GetKeyDown(KeyCode.X)) 
+        {
+            ani.SetBool("punch",true);
+        }
+        else { 
+        AnimatorStateInfo stateInfo = ani.GetCurrentAnimatorStateInfo(0);
+        ani.SetBool("punch", false);
+        }
 
     }
-    void Move(float movementH)
+    void Move( )
     {
+        float movementH = 0f;
+        movementH = Input.GetAxis("Horizontal") * movespeed * Time.deltaTime;
+        //rb.AddForce(Vector2.right * movespeed * movementH);
         Vector3 newPos = new Vector3(transform.position.x + movementH, transform.position.y, transform.position.z);
         transform.position = newPos;
+
     }
     void coolingShowing() 
     {
@@ -79,27 +114,28 @@ public class playerControl : MonoBehaviour
         }
     }
     void Jump() 
-    {
-        
-        rb.AddForce(Vector2.up * jumpHeight);
-        
+    {        
+        rb.AddForce(Vector2.up * jumpHeight);      
+        isJump = false;
     }
     void JumpUp() 
     {
         if (rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpAirForce);//緩緩上升
+        isJumpUp = false;
     } 
     void groundDetect() 
     {
-        isGround = false;//初始化
-        Collider2D[] coli = Physics2D.OverlapCircleAll(transform.position, CheckRadius);
-        foreach (var count in coli)
+        isGround = false;//初始化       
+        RaycastHit2D []hit = Physics2D.RaycastAll(transform.position,Vector2.down, CheckRadius);        
+        foreach (var count in hit)
         {
-            if (count.gameObject.tag == "Ground")
+            if (count.collider.gameObject.tag == "Ground")
             {
                 isGround = true;
             }
         }
+       
     }
 
     void OnDrawGizmos() //偵測範圍
@@ -110,13 +146,10 @@ public class playerControl : MonoBehaviour
     }
 
     void detectEnemy() 
-    {
-       
-        Collider2D[] ColliderDetect = Physics2D.OverlapCircleAll(transform.position, detectDistance, ColliderMask);
-       
+    {       
+        Collider2D[] ColliderDetect = Physics2D.OverlapCircleAll(transform.position, detectDistance, ColliderMask);       
         if (ColliderDetect != null)
-        {
-            
+        {            
             // 陣列檢查  元素命名enemy
 
             foreach (var enemy in ColliderDetect)
@@ -131,16 +164,10 @@ public class playerControl : MonoBehaviour
                     // 若碰撞結果為 tag == enemy
                     if (hit.collider.tag == "Enemy")
                     {
-
                         //把物件傳給子彈 好讓他有敵人的座標
                         script = bullet.transform.GetComponent<bulletFly>();
-                        script.target = hit.collider.gameObject;
-                        //target = hit.collider.gameObject;
-                       
-
-                        Debug.DrawLine(this.transform.position, hit.transform.position, Color.white);
-                        // print(hit.collider.name);
-
+                        script.target = hit.collider.gameObject;     
+                        Debug.DrawLine(this.transform.position, hit.transform.position, Color.white);     
                     }
                 }
             }

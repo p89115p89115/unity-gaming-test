@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
-       // if(collision.gameObject.name == "bullet(Clone)")
+       if(collision.gameObject.tag == "bullet")
         Destroy(this.gameObject);
         
     }

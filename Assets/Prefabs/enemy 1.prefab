@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5006558622334036177}
   - component: {fileID: 5006558622334036141}
   - component: {fileID: 5006558622334036140}
+  - component: {fileID: -8773055858947000753}
   m_Layer: 8
   m_Name: enemy 1
   m_TagString: Enemy
@@ -115,14 +116,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5006558622334036178}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -140,6 +141,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a36e3b9c222dcc4abf015ea4f577ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 4644045301263091892, guid: 67420066219288d4ebecd6891052fbff, type: 3}
   moveSpeed: 10
   smoothTime: 1
+--- !u!114 &-8773055858947000753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5006558622334036178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f532ce3b0363a72468ec498044beada5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heathPoint: 2
+  attackPoint: 1
+  colliderTag: Player
+  backForce: 40
