@@ -31,39 +31,53 @@ public class playerControl : MonoBehaviour
     public GameObject target; //接收用 不用設
 
     private Animator ani;
+
+    public float rollSpeed;// 滾動距離
+    private int Rollingcount = 0; 
+    public float rollingtime; // 滾動時間 先不要改 可能有BUG
+
+    public bool inputLock=false; //鎖按鍵
+    private bool isRoll;
+    private GameObject PS; //子物件 playerSprite
+    private SpriteRenderer PSSR; //player的圖片
+    private bool facingRight; //判斷面向
+    private GameObject TriggerCollider;
     void Start()
     {
         currentTime = coolingTime; //初始化現在時間
         rb = GetComponent<Rigidbody2D>();
         ColliderMask = LayerMask.GetMask("Collider");
         ani = GetComponent<Animator>();
+        PS = gameObject.transform.GetChild(4).gameObject;
+        PSSR = PS.GetComponent<SpriteRenderer>();// 取得playerSprite的 SpriteRenderer
+        TriggerCollider = gameObject.transform.GetChild(2).gameObject;
     }
     private void Update()
     {
         
-        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        if (Input.GetKeyDown(KeyCode.Space) && isGround && inputLock != true)
         {
             print("JUMP");
             isJump = true;
         }
-        if (Input.GetAxis("Horizontal").ToString() != "")
+        if (Input.GetAxis("Horizontal").ToString() != "" )
         {
             isMove = true;
+            
         }
         if (Input.GetKeyUp(KeyCode.Space))  //跳躍上升
         {
             isJumpUp = true;
         }
     }
+    
     void FixedUpdate()
-    {
-        if (isMove) //移動
+    {              
+        if (isMove && inputLock!=true) //移動
         {            
-            Move(); 
-        }
-                      
-        coolingShowing();
-
+            Move();            
+        }                      
+        coolingShowing();//子彈冷卻
         if (Input.GetKeyDown(KeyCode.Z) && coolingImage.fillAmount == 0) //射擊
         {
             detectEnemy();            
@@ -78,16 +92,42 @@ public class playerControl : MonoBehaviour
         }
         groundDetect(); //落地偵測    
 
-        if (Input.GetKeyDown(KeyCode.X)) 
+        if (Input.GetKeyDown(KeyCode.X) && isGround==true && isRoll != true) //滾
         {
-            ani.SetBool("punch",true);
+            InvokeRepeating("Roll", 0, 0.01f);// 每o.o1秒執行一次
         }
-        else { 
-        AnimatorStateInfo stateInfo = ani.GetCurrentAnimatorStateInfo(0);
-        ani.SetBool("punch", false);
+        else
+        {
+            AnimatorStateInfo stateInfo = ani.GetCurrentAnimatorStateInfo(0);
+            ani.SetBool("roll", false); 
         }
-
+    }    
+    void Roll() 
+    {
+        TriggerCollider.active = false;// 去掉碰撞(無敵)
+        isRoll =true;
+        inputLock = true;
+        ani.SetBool("roll", true);
+        
+        if (facingRight == true) { //向右滾
+            Vector3 Rollto = new Vector3(transform.position.x + rollSpeed, transform.position.y, transform.position.z);
+            transform.position = Rollto;
+        }
+        if (facingRight == false) { //向左滾
+            Vector3 Rollto = new Vector3(transform.position.x - rollSpeed, transform.position.y, transform.position.z);
+            transform.position = Rollto;
+        }
+        Rollingcount++;
+        if (Rollingcount == rollingtime/0.01)
+        {
+            Rollingcount = 0;
+            inputLock = false;
+            isRoll = false;
+            TriggerCollider.active = true; //無敵結束
+            CancelInvoke("Roll");  //翻滾結束         
+        }        
     }
+    
     void Move( )
     {
         float movementH = 0f;
@@ -95,7 +135,17 @@ public class playerControl : MonoBehaviour
         //rb.AddForce(Vector2.right * movespeed * movementH);
         Vector3 newPos = new Vector3(transform.position.x + movementH, transform.position.y, transform.position.z);
         transform.position = newPos;
-
+        //print(movementH);
+        if (movementH > 0)
+        {
+            facingRight = true;
+            PSSR.flipX = false;
+        }
+        if(movementH < 0)
+        {
+            facingRight = false;
+            PSSR.flipX = true;            
+        }
     }
     void coolingShowing() 
     {
@@ -189,7 +239,7 @@ public class playerControl : MonoBehaviour
         if (c.gameObject.name == "moving floor")
         {
            
-            var target = c.gameObject.transform;
+            //var target = c.gameObject.transform;
             // target.SetParent(this.transform);
             this.transform.parent = c.transform;
         }

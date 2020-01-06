@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 7720686422468924411}
   - component: {fileID: 7720686422468924410}
   - component: {fileID: 7720686422468924404}
-  - component: {fileID: -6109504529032643881}
-  - component: {fileID: -7935598056145049403}
+  - component: {fileID: 8719981802566203897}
+  - component: {fileID: -3072603981313752864}
+  - component: {fileID: -4901873217227034450}
   m_Layer: 0
   m_Name: bullet
   m_TagString: bullet
@@ -93,9 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f2c032b21d4d0d42bd88fcfaeb7c446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flyingSpeed: 700
+  destotyTime: 3
   target: {fileID: 0}
---- !u!61 &-6109504529032643881
+  moveSpeed: 700
+--- !u!61 &8719981802566203897
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +107,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -121,7 +123,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &-7935598056145049403
+--- !u!114 &-3072603981313752864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7720686422468924407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f532ce3b0363a72468ec498044beada5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heathPoint: 1
+  attackPoint: 1
+  isHit: 0
+  colliderTag: 
+  backForceX: 0
+  backForceY: 0
+--- !u!50 &-4901873217227034450
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -141,4 +161,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0

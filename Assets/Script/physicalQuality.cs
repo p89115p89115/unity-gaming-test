@@ -10,19 +10,23 @@ public class physicalQuality : MonoBehaviour
     //private Animator ani;
     private MeshRenderer md;
     private Rigidbody2D rb;
-    private bool isHit; 
+    public bool isHit; 
     private Vector2 enemyV;
     public string colliderTag; //碰撞對象的tag 
     public float backForceX; //後彈的力道
     public float backForceY;
-    
+    //public bool Invincible;
+
+
+
     private void Start()
     {        
       //  ani = GetComponent<Animator>();
         md = GetComponent<MeshRenderer>();
         rb = GetComponent<Rigidbody2D>();
+    
     }   
-    void Update()
+    void FixedUpdate()
     {
         if (heathPoint <= 0) //血量歸 0 就消滅 
             Destroy(this.gameObject);
@@ -40,6 +44,20 @@ public class physicalQuality : MonoBehaviour
         {
             enemyV = collision.transform.position;
             physicalQuality PQ;
+            PQ = collision.gameObject.GetComponent<physicalQuality>();
+            heathPoint -= PQ.attackPoint; //扣血            
+            isHit = true;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.tag == colliderTag)
+        {
+            //enemyV = collision.transform.position;
+
+            physicalQuality PQ;
+
             PQ = collision.gameObject.GetComponent<physicalQuality>();
             heathPoint -= PQ.attackPoint; //扣血            
             isHit = true;
