@@ -11,7 +11,7 @@ public class HeathText : MonoBehaviour
     public Text text;
     void Start()
     {
-        player = GameObject.Find("Player");
+        
        // heathPoint=player.GetComponent<physicalQuality>().heathPoint;
         
     }
@@ -19,6 +19,7 @@ public class HeathText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        player = GameObject.Find("Player");
         heathPoint = player.GetComponent<physicalQuality>().heathPoint;
         text.text = "HP："+heathPoint;
     }

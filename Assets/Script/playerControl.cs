@@ -7,18 +7,21 @@ public class playerControl : MonoBehaviour
 {
     public float coolingTime = 2.0f; //冷卻時間
     private float currentTime = 0.0f;
-    public Image coolingImage; //冷卻UI圖片
+    //public Image coolingImage; //冷卻UI圖片
 
     public float movespeed;  //移動速度
-    public bool isGround;
+
     public float CheckRadius;//檢測長度
 
     public float jumpHeight; //跳躍高度
     public float jumpAirForce;
 
+    public bool isGround;
     private bool isMove;
     private bool isJump;
     private bool isJumpUp;
+    public bool isShoot=false;
+    private bool isRoll;
 
     public float detectDistance; 
     private Rigidbody2D rb;
@@ -37,27 +40,29 @@ public class playerControl : MonoBehaviour
     public float rollingtime; // 滾動時間 先不要改 可能有BUG
 
     public bool inputLock=false; //鎖按鍵
-    private bool isRoll;
+    
     private GameObject PS; //子物件 playerSprite
     private SpriteRenderer PSSR; //player的圖片
-    private bool facingRight; //判斷面向
+    public bool facingRight; //判斷面向
     private GameObject TriggerCollider;
+
+    private weaponSystem WS;
+    public int WeaponStyle=1; //武器種類
     void Start()
     {
-        currentTime = coolingTime; //初始化現在時間
+        currentTime = 0; //初始化現在時間
         rb = GetComponent<Rigidbody2D>();
         ColliderMask = LayerMask.GetMask("Collider");
         ani = GetComponent<Animator>();
-        PS = gameObject.transform.GetChild(4).gameObject;
+        PS = gameObject.transform.GetChild(3).gameObject;
         PSSR = PS.GetComponent<SpriteRenderer>();// 取得playerSprite的 SpriteRenderer
         TriggerCollider = gameObject.transform.GetChild(2).gameObject;
+        WS = GetComponent<weaponSystem>();
     }
     private void Update()
-    {
-        
+    {       
         if (Input.GetKeyDown(KeyCode.Space) && isGround && inputLock != true)
-        {
-            print("JUMP");
+        {            
             isJump = true;
         }
         if (Input.GetAxis("Horizontal").ToString() != "" )
@@ -69,18 +74,30 @@ public class playerControl : MonoBehaviour
         {
             isJumpUp = true;
         }
+        if (Input.GetKeyDown(KeyCode.X) && isGround == true) 
+        {
+            isRoll = true;
+        }
     }
-    
     void FixedUpdate()
-    {              
+    {
+        if (Input.GetKeyDown(KeyCode.C)) 
+        {
+            WS.CW();// 換武器
+            WeaponStyle++;
+            if (WeaponStyle == 3)
+                WeaponStyle = 1;
+        }        
+        isShoot = false;        
         if (isMove && inputLock!=true) //移動
         {            
             Move();            
         }                      
         coolingShowing();//子彈冷卻
-        if (Input.GetKeyDown(KeyCode.Z) && coolingImage.fillAmount == 0) //射擊
-        {
-            detectEnemy();            
+        //覺得我記錄冷卻的時間應該反過來 不然currentTime會越來越大w
+        if (Input.GetKeyDown(KeyCode.Z) && currentTime >=coolingTime  && inputLock != true) //射擊
+        {            
+            detectEnemy();     
         }
         if (isJump) //跳躍
         {
@@ -92,7 +109,7 @@ public class playerControl : MonoBehaviour
         }
         groundDetect(); //落地偵測    
 
-        if (Input.GetKeyDown(KeyCode.X) && isGround==true && isRoll != true) //滾
+        if (isRoll) //滾
         {
             InvokeRepeating("Roll", 0, 0.01f);// 每o.o1秒執行一次
         }
@@ -104,8 +121,7 @@ public class playerControl : MonoBehaviour
     }    
     void Roll() 
     {
-        TriggerCollider.active = false;// 去掉碰撞(無敵)
-        isRoll =true;
+        TriggerCollider.active = false;// 去掉碰撞(無敵)isRoll =true;        
         inputLock = true;
         ani.SetBool("roll", true);
         
@@ -117,19 +133,22 @@ public class playerControl : MonoBehaviour
             Vector3 Rollto = new Vector3(transform.position.x - rollSpeed, transform.position.y, transform.position.z);
             transform.position = Rollto;
         }
+        //翻滾是 每0.01秒執行一次 每次移動rollspeed距離 共移動rollingtime秒
+        //動畫是跑 0.4秒 所以可能不要超過比較好
         Rollingcount++;
-        if (Rollingcount == rollingtime/0.01)
+        if (Rollingcount >= rollingtime*100)
         {
             Rollingcount = 0;
             inputLock = false;
             isRoll = false;
             TriggerCollider.active = true; //無敵結束
             CancelInvoke("Roll");  //翻滾結束         
-        }        
-    }
-    
+        }
+        isRoll = false;
+    }    
     void Move( )
     {
+      
         float movementH = 0f;
         movementH = Input.GetAxis("Horizontal") * movespeed * Time.deltaTime;
         //rb.AddForce(Vector2.right * movespeed * movementH);
@@ -138,7 +157,7 @@ public class playerControl : MonoBehaviour
         //print(movementH);
         if (movementH > 0)
         {
-            facingRight = true;
+            facingRight = true; // 面向
             PSSR.flipX = false;
         }
         if(movementH < 0)
@@ -152,15 +171,15 @@ public class playerControl : MonoBehaviour
         if (currentTime < coolingTime)
         {
             currentTime += Time.deltaTime;
-            coolingImage.fillAmount = 1 - currentTime / coolingTime; //按時間比例計算出Fill Amount值
+            //coolingImage.fillAmount = 1 - currentTime / coolingTime; //按時間比例計算出Fill Amount值
         }
     }
     public void OnBtnClickSkill()// 冷卻時間
     {        
         if (currentTime >= coolingTime)
-        {
+        {           
             currentTime = 0.0f;
-            coolingImage.fillAmount = 1.0f;
+           // coolingImage.fillAmount = 1.0f;
         }
     }
     void Jump() 
@@ -187,14 +206,12 @@ public class playerControl : MonoBehaviour
         }
        
     }
-
     void OnDrawGizmos() //偵測範圍
     {
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectDistance);
     }
-
     void detectEnemy() 
     {       
         Collider2D[] ColliderDetect = Physics2D.OverlapCircleAll(transform.position, detectDistance, ColliderMask);       
@@ -226,13 +243,12 @@ public class playerControl : MonoBehaviour
         //如果範圍內有敵人才射
         if (script.target != null)
         {
-            Instantiate(bullet, gun.transform.position, gun.transform.rotation);
-            OnBtnClickSkill();
+            isShoot = true;              
+            WS.Weapon(WeaponStyle);//依現在武器種類射擊
+            OnBtnClickSkill(); //冷卻
         }
-        script.target = null; //把target 重設成null 不然會一直鎖定到
-
+        script.target = null; //把target 重設成null 不然會一直鎖定到      
     }
-
     void OnCollisionEnter2D(Collision2D c)
     {
         
@@ -244,7 +260,6 @@ public class playerControl : MonoBehaviour
             this.transform.parent = c.transform;
         }
     }
-
     void OnCollisionExit2D(Collision2D c)
     {
         if (c.gameObject.name == "moving floor")

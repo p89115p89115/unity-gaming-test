@@ -7,18 +7,20 @@ public class edgeDetect : MonoBehaviour
     // Start is called before the first frame update
     public float moveSpeed;
     private Vector3 EdgeL,EdgeR;
-    public GameObject floor; //身處的平台
+    private GameObject floor; //身處的平台
     private bool rearchPoint= true;
     void Start()
     {
        
-        EdgeL = new Vector3(floor.transform.position.x-floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
-        EdgeR = new Vector3(floor.transform.position.x+floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
+       // EdgeL = new Vector3(floor.transform.position.x-floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
+       // EdgeR = new Vector3(floor.transform.position.x+floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
 
     }
     void FixedUpdate()
     {
-        
+        EdgeL = new Vector3(floor.transform.position.x - floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
+        EdgeR = new Vector3(floor.transform.position.x + floor.transform.localScale.x / 2, floor.transform.position.y + floor.transform.localScale.y / 2);
+
         if (rearchPoint == true)
         {         
             transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
@@ -42,6 +44,6 @@ public class edgeDetect : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        floor = collision.gameObject;
     }
 }

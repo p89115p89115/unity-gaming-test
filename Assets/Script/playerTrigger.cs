@@ -9,8 +9,7 @@ public class playerTrigger : MonoBehaviour
     private GameObject HO;
     public string colliderTag;
     void Start()
-    {
-      
+    {      
         HO = GameObject.Find("Player");
     }
 
